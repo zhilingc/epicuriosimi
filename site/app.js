@@ -145,7 +145,14 @@ function submitGuess(idx) {
   if (won) finishGame(true);
 }
 
+function updateGuessCount() {
+  const n = guesses.length;
+  document.getElementById("guess-count").textContent =
+    n ? `, ${n} ${n === 1 ? "guess" : "guesses"}` : "";
+}
+
 function renderTables() {
+  updateGuessCount();
   const last = guesses[guesses.length - 1];
   for (const { key, tableId } of MEASURES) {
     const tbody = document.querySelector(`#${tableId} tbody`);
@@ -178,8 +185,10 @@ function finishGame(celebrate) {
   document.querySelector("#guess-form button").disabled = true;
   clearSuggestions();
   if (!celebrate) return;
-  confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 } });
-  setTimeout(() => confetti({ particleCount: 80, spread: 120, origin: { y: 0.4 } }), 300);
+  confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 },
+             disableForReducedMotion: true });
+  setTimeout(() => confetti({ particleCount: 80, spread: 120, origin: { y: 0.4 },
+                              disableForReducedMotion: true }), 300);
   const n = guesses.length;
   document.getElementById("win-text").textContent =
     `${displayNames[puzzle.target]} in ${n} ${n === 1 ? "guess" : "guesses"}!`;
@@ -205,7 +214,7 @@ async function init() {
     return;
   }
   displayNames = vocab.map((w) => w.replace(/_/g, " "));
-  document.getElementById("puzzle-number").textContent = `— puzzle #${puzzle.puzzle_number}`;
+  document.getElementById("puzzle-number").textContent = `puzzle #${puzzle.puzzle_number}`;
   loadState();
   renderTables();
   if (won) finishGame(false);
@@ -217,6 +226,22 @@ async function init() {
   document.getElementById("win-close").addEventListener("click", () => {
     document.getElementById("win-modal").hidden = true;
   });
+
+  const helpModal = document.getElementById("help-modal");
+  document.getElementById("help-open").addEventListener("click", () => {
+    helpModal.hidden = false;
+  });
+  document.getElementById("help-close").addEventListener("click", () => {
+    helpModal.hidden = true;
+  });
+  try {
+    if (!localStorage.getItem("epicuriosimi:help-seen")) {
+      localStorage.setItem("epicuriosimi:help-seen", "1");
+      helpModal.hidden = false;
+    }
+  } catch (e) {
+    /* storage unavailable: open help only via the button */
+  }
 }
 
 init();
