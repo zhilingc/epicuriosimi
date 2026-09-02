@@ -111,6 +111,8 @@ tr.latest td { background: #fdf0e3; font-weight: 600; }
 .band-warm  { background: #f97316; }
 .band-hot   { background: #ef4444; }
 
+.modal[hidden] { display: none; }
+
 .modal {
   position: fixed;
   inset: 0;
