@@ -8,10 +8,12 @@
   --steel: #6b7370;
   --hairline: #e3e6e2;
   --tint: #edf0ec;
-  --cold: #4c7fd1;
-  --tepid: #3fa08c;
-  --warm: #e08a2e;
-  --hot: #d84343;
+  --cold: #4173c2;
+  --tepid: #2e8474;
+  --warm: #c9761a;
+  --hot: #d13c3c;
+  --latest-bg: #f9f1da;
+  --latest-bar: #d9a92e;
   --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
 }
@@ -157,49 +159,54 @@ main { width: 100%; max-width: 1080px; margin: 0 auto; padding: 1rem 1.25rem; fl
   h1 { font-size: 2.1rem; }
 }
 
-.tables section { min-width: 0; overflow-x: auto; }
-
-.tables h2 {
-  margin: 0 0 0.4rem;
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.15rem;
-  border-bottom: 1px solid var(--ink);
-  padding-bottom: 0.4rem;
+.tables section {
+  min-width: 0;
+  overflow-x: auto;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
 }
 
-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.tables h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 0.5rem;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 1rem; }
 th {
   text-align: left;
   color: var(--steel);
-  font-weight: 500;
-  font-size: 0.85rem;
+  font-weight: 600;
+  font-size: 0.9rem;
   padding: 0.4rem 0.5rem 0.3rem;
 }
-td { padding: 0.45rem 0.5rem; border-top: 1px solid var(--hairline); }
+td { padding: 0.5rem; border-top: 1px solid var(--hairline); }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
-tr.latest td { background: var(--tint); }
-tr.latest td:first-child { font-weight: 600; }
+
+tr.latest td { background: var(--latest-bg); }
+tr.latest td:first-child {
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--latest-bar);
+}
 
 .band {
+  display: inline-block;
+  padding: 0.12rem 0.6rem;
+  border-radius: 999px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: #fff;
   white-space: nowrap;
 }
-.band::before {
-  content: "";
-  display: inline-block;
-  width: 0.55em;
-  height: 0.55em;
-  border-radius: 50%;
-  margin-right: 0.4em;
-  background: currentColor;
-}
-.band-cold  { color: var(--cold); }
-.band-tepid { color: var(--tepid); }
-.band-warm  { color: var(--warm); }
-.band-hot   { color: var(--hot); }
+.band-cold  { background: var(--cold); }
+.band-tepid { background: var(--tepid); }
+.band-warm  { background: var(--warm); }
+.band-hot   { background: var(--hot); }
 
 footer {
   text-align: center;
