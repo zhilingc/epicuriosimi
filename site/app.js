@@ -228,7 +228,9 @@ function finishGame(celebrate) {
 }
 
 async function init() {
-  const dateStr = todayStr();
+  // ?date=YYYY-MM-DD plays that day's puzzle instead of today's
+  const override = new URLSearchParams(location.search).get("date");
+  const dateStr = /^\d{4}-\d{2}-\d{2}$/.test(override || "") ? override : todayStr();
   try {
     const [vres, dres] = await Promise.all([
       fetch("vocab.json"),
