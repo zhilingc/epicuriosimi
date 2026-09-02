@@ -1,3 +1,10 @@
+# track only site/ and precompute/
+/*
+!/.gitignore
+!/site/
+!/precompute/
+
+# generated / local artifacts within tracked folders
 __pycache__/
 .pytest_cache/
 precompute/.venv/
