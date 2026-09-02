@@ -206,12 +206,13 @@ main { width: 100%; max-width: 1080px; margin: 0 auto; padding: 1rem 1.25rem; fl
   vertical-align: 0.15em;
   cursor: pointer;
 }
-.info-button:hover, .info-button[aria-expanded="true"] {
+.info-button:hover, .info-button:focus-visible {
   border-color: var(--ink);
   color: var(--ink);
 }
 
 .info-pop {
+  display: none;
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
@@ -228,6 +229,9 @@ main { width: 100%; max-width: 1080px; margin: 0 auto; padding: 1rem 1.25rem; fl
   line-height: 1.5;
   color: var(--ink);
 }
+
+.info-button:hover + .info-pop,
+.info-button:focus-visible + .info-pop { display: block; }
 
 table { width: 100%; border-collapse: collapse; font-size: 1rem; }
 th {

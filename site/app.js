@@ -255,30 +255,6 @@ async function init() {
 
   document.getElementById("hint-button").addEventListener("click", takeHint);
 
-  const infoButtons = [...document.querySelectorAll(".info-button")];
-  const closeInfoPops = () => {
-    for (const b of infoButtons) {
-      b.setAttribute("aria-expanded", "false");
-      b.nextElementSibling.hidden = true;
-    }
-  };
-  for (const b of infoButtons) {
-    b.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const pop = b.nextElementSibling;
-      const open = !pop.hidden;
-      closeInfoPops();
-      if (!open) {
-        pop.hidden = false;
-        b.setAttribute("aria-expanded", "true");
-      }
-    });
-  }
-  document.addEventListener("click", closeInfoPops);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeInfoPops();
-  });
-
   const helpModal = document.getElementById("help-modal");
   document.getElementById("help-open").addEventListener("click", () => {
     helpModal.hidden = false;
