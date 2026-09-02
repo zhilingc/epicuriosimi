@@ -1,0 +1,6 @@
+__pycache__/
+.pytest_cache/
+precompute/.venv/
+precompute/.model_cache/
+site/data/
+site/vocab.json
