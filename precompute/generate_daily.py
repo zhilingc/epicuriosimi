@@ -13,7 +13,7 @@ from epicure_daily.models import download_models, load_all
 from epicure_daily.puzzle import build_puzzle
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SITE_DIR = REPO_ROOT / "site"
+SITE_DIR = REPO_ROOT
 CACHE_DIR = REPO_ROOT / "precompute" / ".model_cache"
 
 

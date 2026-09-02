@@ -1,7 +1,11 @@
-# track only site/ and precompute/
+# track only the site files and precompute/
+# (everything else at root — docs, data/, vocab.json, scratch — stays local)
 /*
 !/.gitignore
-!/site/
+!/index.html
+!/style.css
+!/app.js
+!/lib/
 !/precompute/
 
 # generated / local artifacts within tracked folders
@@ -9,5 +13,3 @@ __pycache__/
 .pytest_cache/
 precompute/.venv/
 precompute/.model_cache/
-site/data/
-site/vocab.json
