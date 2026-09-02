@@ -51,12 +51,17 @@ function saveState() {
   }
 }
 
-function showNotice(text) {
+function showNotice(text, sticky = false) {
   const el = document.getElementById("notice");
   el.textContent = text;
   el.hidden = false;
   clearTimeout(noticeTimer);
-  noticeTimer = setTimeout(() => { el.hidden = true; }, 2500);
+  if (!sticky) noticeTimer = setTimeout(() => { el.hidden = true; }, 2500);
+}
+
+function hideNotice() {
+  clearTimeout(noticeTimer);
+  document.getElementById("notice").hidden = true;
 }
 
 function updateSuggestions() {
@@ -132,6 +137,7 @@ function onSubmit(e) {
 }
 
 function submitGuess(idx) {
+  hideNotice();
   if (guesses.includes(idx)) {
     showNotice(`already guessed ${displayNames[idx]}`);
     input().value = "";
@@ -167,8 +173,8 @@ function takeHint() {
     if (candidates.length) {
       const idx = candidates[Math.floor(Math.random() * candidates.length)];
       hints += 1;
-      showNotice(`hint: ${displayNames[idx]} runs hot in “${label}”`);
       submitGuess(idx);
+      showNotice(`hint: ${displayNames[idx]} runs hot in “${label}”`, true);
       return;
     }
   }
