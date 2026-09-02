@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>epicuriosimi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>epicuriosimi</h1>
+    <p class="tagline">guess the daily ingredient <span id="puzzle-number"></span></p>
+  </header>
+  <main>
+    <div id="message" class="message" hidden></div>
+    <form id="guess-form" autocomplete="off">
+      <div class="input-wrap">
+        <input id="guess-input" type="text" placeholder="type an ingredient…"
+               spellcheck="false" autofocus>
+        <ul id="suggestions" hidden></ul>
+      </div>
+      <button type="submit">guess</button>
+    </form>
+    <p id="notice" class="notice" hidden></p>
+    <div class="tables">
+      <section>
+        <h2>pairs well with</h2>
+        <table id="table-cooc">
+          <thead><tr><th>ingredient</th><th class="num">score</th><th>heat</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+      <section>
+        <h2>shares flavor profile</h2>
+        <table id="table-chem">
+          <thead><tr><th>ingredient</th><th class="num">score</th><th>heat</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+      <section>
+        <h2>similar to</h2>
+        <table id="table-core">
+          <thead><tr><th>ingredient</th><th class="num">score</th><th>heat</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+  <div id="win-modal" class="modal" hidden>
+    <div class="modal-box">
+      <h2>you got it! 🎉</h2>
+      <p id="win-text"></p>
+      <button id="win-close">close</button>
+    </div>
+  </div>
+  <script src="lib/confetti.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
