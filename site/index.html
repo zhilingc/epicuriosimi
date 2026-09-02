@@ -23,25 +23,46 @@
         <ul id="suggestions" hidden></ul>
       </div>
       <button type="submit">guess</button>
+      <button type="button" id="hint-button" class="button-secondary">hint</button>
     </form>
     <p id="notice" class="notice" hidden></p>
     <div class="tables">
       <section>
-        <h2>pairs well with</h2>
+        <h2>pairs well with
+          <button type="button" class="info-button" aria-expanded="false"
+                  aria-label="about this score">?</button>
+          <span class="info-pop" role="note" hidden>from epicure-cooc, trained purely
+            on which ingredients appear together across 4&nbsp;million recipes in eight
+            languages. a high score means "these two get cooked together" — it knows
+            nothing about taste.</span>
+        </h2>
         <table id="table-cooc">
           <thead><tr><th>ingredient</th><th class="num">score</th><th>heat</th></tr></thead>
           <tbody></tbody>
         </table>
       </section>
       <section>
-        <h2>shares flavor profile</h2>
+        <h2>shares flavor profile
+          <button type="button" class="info-button" aria-expanded="false"
+                  aria-label="about this score">?</button>
+          <span class="info-pop" role="note" hidden>from epicure-chem, trained only on
+            flavor chemistry (FlavorDB compounds) — recipes are never consulted. a high
+            score means the two ingredients share flavor compounds, even if no dish
+            combines them.</span>
+        </h2>
         <table id="table-chem">
           <thead><tr><th>ingredient</th><th class="num">score</th><th>heat</th></tr></thead>
           <tbody></tbody>
         </table>
       </section>
       <section>
-        <h2>similar to</h2>
+        <h2>similar to
+          <button type="button" class="info-button" aria-expanded="false"
+                  aria-label="about this score">?</button>
+          <span class="info-pop" role="note" hidden>from epicure-core, the blended
+            sibling: flavor chemistry plus recipe co-occurrence in one embedding. its
+            score is the best overall "these two are alike."</span>
+        </h2>
         <table id="table-core">
           <thead><tr><th>ingredient</th><th class="num">score</th><th>heat</th></tr></thead>
           <tbody></tbody>

@@ -1,9 +1,9 @@
 "use strict";
 
 const MEASURES = [
-  { key: "cooc", tableId: "table-cooc" },
-  { key: "chem", tableId: "table-chem" },
-  { key: "core", tableId: "table-core" },
+  { key: "cooc", tableId: "table-cooc", label: "pairs well with" },
+  { key: "chem", tableId: "table-chem", label: "shares flavor profile" },
+  { key: "core", tableId: "table-core", label: "similar to" },
 ];
 const BAND_NAMES = ["cold", "tepid", "warm", "hot"];
 const MAX_SUGGESTIONS = 8;
@@ -13,6 +13,7 @@ let displayNames = [];   // underscores -> spaces
 let puzzle = null;       // today's data file content
 let guesses = [];        // vocab indices in guess order
 let won = false;
+let hints = 0;           // hints taken today
 let suggestionIndices = []; // vocab indices currently shown in the dropdown
 let activeSuggestion = -1;  // position within suggestionIndices
 let noticeTimer = null;
@@ -36,6 +37,7 @@ function loadState() {
       (i) => Number.isInteger(i) && i >= 0 && i < vocab.length
     );
     won = Boolean(s.won);
+    hints = Number.isInteger(s.hints) && s.hints >= 0 ? s.hints : 0;
   } catch (e) {
     /* storage unavailable: play without persistence */
   }
@@ -43,7 +45,7 @@ function loadState() {
 
 function saveState() {
   try {
-    localStorage.setItem(storageKey(), JSON.stringify({ guesses, won }));
+    localStorage.setItem(storageKey(), JSON.stringify({ guesses, won, hints }));
   } catch (e) {
     /* ignore */
   }
@@ -147,8 +149,30 @@ function submitGuess(idx) {
 
 function updateGuessCount() {
   const n = guesses.length;
-  document.getElementById("guess-count").textContent =
-    n ? `, ${n} ${n === 1 ? "guess" : "guesses"}` : "";
+  let text = n ? `, ${n} ${n === 1 ? "guess" : "guesses"}` : "";
+  if (hints) text += `, ${hints} ${hints === 1 ? "hint" : "hints"}`;
+  document.getElementById("guess-count").textContent = text;
+}
+
+function takeHint() {
+  if (won) return;
+  const shuffled = [...MEASURES].sort(() => Math.random() - 0.5);
+  for (const { key, label } of shuffled) {
+    const candidates = [];
+    for (let i = 0; i < vocab.length; i++) {
+      if (puzzle.bands[key][i] === 3 && i !== puzzle.target && !guesses.includes(i)) {
+        candidates.push(i);
+      }
+    }
+    if (candidates.length) {
+      const idx = candidates[Math.floor(Math.random() * candidates.length)];
+      hints += 1;
+      showNotice(`hint: ${displayNames[idx]} runs hot in “${label}”`);
+      submitGuess(idx);
+      return;
+    }
+  }
+  showNotice("no hints left — every hot ingredient is already on the board");
 }
 
 function renderTables() {
@@ -182,7 +206,8 @@ function renderTables() {
 
 function finishGame(celebrate) {
   input().disabled = true;
-  document.querySelector("#guess-form button").disabled = true;
+  document.querySelector("#guess-form button[type=submit]").disabled = true;
+  document.getElementById("hint-button").disabled = true;
   clearSuggestions();
   if (!celebrate) return;
   confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 },
@@ -190,8 +215,9 @@ function finishGame(celebrate) {
   setTimeout(() => confetti({ particleCount: 80, spread: 120, origin: { y: 0.4 },
                               disableForReducedMotion: true }), 300);
   const n = guesses.length;
+  const hintNote = hints ? ` (${hints} ${hints === 1 ? "hint" : "hints"})` : "";
   document.getElementById("win-text").textContent =
-    `${displayNames[puzzle.target]} in ${n} ${n === 1 ? "guess" : "guesses"}!`;
+    `${displayNames[puzzle.target]} in ${n} ${n === 1 ? "guess" : "guesses"}${hintNote}!`;
   document.getElementById("win-modal").hidden = false;
 }
 
@@ -225,6 +251,32 @@ async function init() {
   document.getElementById("guess-form").addEventListener("submit", onSubmit);
   document.getElementById("win-close").addEventListener("click", () => {
     document.getElementById("win-modal").hidden = true;
+  });
+
+  document.getElementById("hint-button").addEventListener("click", takeHint);
+
+  const infoButtons = [...document.querySelectorAll(".info-button")];
+  const closeInfoPops = () => {
+    for (const b of infoButtons) {
+      b.setAttribute("aria-expanded", "false");
+      b.nextElementSibling.hidden = true;
+    }
+  };
+  for (const b of infoButtons) {
+    b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const pop = b.nextElementSibling;
+      const open = !pop.hidden;
+      closeInfoPops();
+      if (!open) {
+        pop.hidden = false;
+        b.setAttribute("aria-expanded", "true");
+      }
+    });
+  }
+  document.addEventListener("click", closeInfoPops);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeInfoPops();
   });
 
   const helpModal = document.getElementById("help-modal");
