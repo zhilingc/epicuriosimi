@@ -653,6 +653,7 @@ Expected: file exists, >10 KB, rg count ≥ 1.
 
 ```css
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 body {
   margin: 0;

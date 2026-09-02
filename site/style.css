@@ -1,4 +1,5 @@
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
@@ -110,8 +111,6 @@ tr.latest td { background: #fdf0e3; font-weight: 600; }
 .band-tepid { background: #14b8a6; }
 .band-warm  { background: #f97316; }
 .band-hot   { background: #ef4444; }
-
-.modal[hidden] { display: none; }
 
 .modal {
   position: fixed;

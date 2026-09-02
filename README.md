@@ -21,7 +21,7 @@ precompute/.venv/bin/pip install -r precompute/requirements.txt
 ## Play
 
 ```bash
-# generate today's puzzle (downloads ~13 MB of models on first run)
+# generate today's puzzle (downloads ~6 MB of models on first run)
 precompute/.venv/bin/python precompute/generate_daily.py
 
 # serve the site
@@ -30,8 +30,7 @@ python3 -m http.server -d site 8123
 
 Open http://localhost:8123 and guess.
 
-Useful flags: `--date YYYY-MM-DD` (specific day), `--days N` (generate N days
-ahead), `--reveal` (print the answer — spoiler!).
+Useful flags: `--date YYYY-MM-DD` (specific day), `--days N` (generate N consecutive days starting at `--date`), `--reveal` (print the answer — spoiler!).
 
 ## Tests
 
