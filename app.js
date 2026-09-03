@@ -14,6 +14,7 @@ let puzzle = null;       // today's data file content
 let guesses = [];        // vocab indices in guess order
 let won = false;
 let hints = 0;           // hints taken today
+let gaveUp = false;
 let suggestionIndices = []; // vocab indices currently shown in the dropdown
 let activeSuggestion = -1;  // position within suggestionIndices
 let noticeTimer = null;
@@ -38,6 +39,7 @@ function loadState() {
     );
     won = Boolean(s.won);
     hints = Number.isInteger(s.hints) && s.hints >= 0 ? s.hints : 0;
+    gaveUp = Boolean(s.gaveUp);
   } catch (e) {
     /* storage unavailable: play without persistence */
   }
@@ -45,7 +47,7 @@ function loadState() {
 
 function saveState() {
   try {
-    localStorage.setItem(storageKey(), JSON.stringify({ guesses, won, hints }));
+    localStorage.setItem(storageKey(), JSON.stringify({ guesses, won, hints, gaveUp }));
   } catch (e) {
     /* ignore */
   }
@@ -122,7 +124,7 @@ function onKeyDown(e) {
 
 function onSubmit(e) {
   e.preventDefault();
-  if (won) return;
+  if (won || gaveUp) return;
   let idx = -1;
   if (activeSuggestion >= 0) {
     idx = suggestionIndices[activeSuggestion];
@@ -161,7 +163,7 @@ function updateGuessCount() {
 }
 
 function takeHint() {
-  if (won) return;
+  if (won || gaveUp) return;
   const shuffled = [...MEASURES].sort(() => Math.random() - 0.5);
   for (const { key, label } of shuffled) {
     const candidates = [];
@@ -210,11 +212,57 @@ function renderTables() {
   }
 }
 
-function finishGame(celebrate) {
+function disableControls() {
   input().disabled = true;
   document.querySelector("#guess-form button[type=submit]").disabled = true;
   document.getElementById("hint-button").disabled = true;
+  document.getElementById("giveup-button").disabled = true;
   clearSuggestions();
+}
+
+function updateResultLine() {
+  const el = document.getElementById("result-line");
+  if (!won && !gaveUp) { el.hidden = true; return; }
+  const answer = displayNames[puzzle.target];
+  if (won) {
+    const n = guesses.length;
+    const h = hints ? `${hints} ${hints === 1 ? "hint" : "hints"}` : "no hints";
+    el.textContent =
+      `today's answer was ${answer} — you guessed it in ${n} ${n === 1 ? "try" : "tries"} with ${h}`;
+  } else {
+    el.textContent = `today's answer was ${answer} — you didn't guess it`;
+  }
+  el.hidden = false;
+}
+
+function giveUp() {
+  if (won || gaveUp) return;
+  gaveUp = true;
+  saveState();
+  hideNotice();
+  document.getElementById("giveup-answer").textContent = displayNames[puzzle.target];
+  const list = document.getElementById("giveup-closest");
+  list.innerHTML = "";
+  for (const { key, label } of MEASURES) {
+    let best = -1;
+    for (let i = 0; i < vocab.length; i++) {
+      if (i === puzzle.target) continue;
+      if (best < 0 || puzzle.scores[key][i] > puzzle.scores[key][best]) best = i;
+    }
+    const li = document.createElement("li");
+    const em = document.createElement("em");
+    em.textContent = label;
+    li.append(em, `: ${displayNames[best]} (${(puzzle.scores[key][best] * 100).toFixed(2)})`);
+    list.appendChild(li);
+  }
+  disableControls();
+  updateResultLine();
+  document.getElementById("giveup-modal").hidden = false;
+}
+
+function finishGame(celebrate) {
+  disableControls();
+  updateResultLine();
   if (!celebrate) return;
   confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 },
              disableForReducedMotion: true });
@@ -251,7 +299,12 @@ async function init() {
   document.getElementById("puzzle-number").textContent = `puzzle #${puzzle.puzzle_number}`;
   loadState();
   renderTables();
-  if (won) finishGame(false);
+  if (won) {
+    finishGame(false);
+  } else if (gaveUp) {
+    disableControls();
+    updateResultLine();
+  }
 
   input().addEventListener("input", updateSuggestions);
   input().addEventListener("keydown", onKeyDown);
@@ -262,6 +315,10 @@ async function init() {
   });
 
   document.getElementById("hint-button").addEventListener("click", takeHint);
+  document.getElementById("giveup-button").addEventListener("click", giveUp);
+  document.getElementById("giveup-close").addEventListener("click", () => {
+    document.getElementById("giveup-modal").hidden = true;
+  });
 
   const helpModal = document.getElementById("help-modal");
   document.getElementById("help-open").addEventListener("click", () => {

@@ -26,6 +26,10 @@
       <button type="button" id="hint-button" class="button-secondary">hint</button>
     </form>
     <p id="notice" class="notice" hidden></p>
+    <p class="giveup-row">
+      <button id="giveup-button" class="link-button" type="button">i give up</button>
+    </p>
+    <p id="result-line" class="result" hidden></p>
     <div class="tables">
       <section>
         <h2>pairs well with
@@ -83,6 +87,15 @@
       <h2 id="win-title">you got it! 🎉</h2>
       <p id="win-text"></p>
       <button id="win-close">close</button>
+    </div>
+  </div>
+  <div id="giveup-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="giveup-title" hidden>
+    <div class="modal-box">
+      <h2 id="giveup-title">today's answer</h2>
+      <p id="giveup-answer" class="answer"></p>
+      <p class="closest-intro">the closest ingredient on each measure:</p>
+      <ul id="giveup-closest" class="closest-list"></ul>
+      <button id="giveup-close">close</button>
     </div>
   </div>
   <div id="help-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>

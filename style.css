@@ -159,6 +159,37 @@ main { width: 100%; max-width: 1080px; margin: 0 auto; padding: 1rem 1.25rem; fl
   font-size: 0.95rem;
 }
 
+.giveup-row { text-align: center; margin: 0.15rem 0 0; }
+.giveup-row .link-button { margin-top: 0; }
+.giveup-row .link-button:disabled {
+  color: var(--hairline);
+  cursor: default;
+  text-decoration: none;
+}
+
+.result {
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  margin: 1.25rem 0 0;
+}
+
+.answer {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  margin: 0.25rem 0 0.75rem;
+}
+.closest-intro { color: var(--steel); font-size: 0.9rem; margin: 0 0 0.25rem; }
+.closest-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  display: inline-block;
+}
+.closest-list li { margin: 0.3rem 0; }
+.closest-list em { font-family: var(--serif); }
+
 .tables {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
