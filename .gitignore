@@ -2,6 +2,7 @@
 # (everything else at root — docs, data/, vocab.json, scratch — stays local)
 /*
 !/.gitignore
+!/.github/
 !/index.html
 !/style.css
 !/app.js
