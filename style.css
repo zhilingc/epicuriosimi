@@ -173,7 +173,6 @@ main { width: 100%; max-width: 1080px; margin: 0 auto; padding: 1rem 1.25rem; fl
 
 .tables section {
   min-width: 0;
-  overflow-x: auto;
   background: var(--paper);
   border: 1px solid var(--hairline);
   border-radius: 8px;
@@ -232,6 +231,8 @@ main { width: 100%; max-width: 1080px; margin: 0 auto; padding: 1rem 1.25rem; fl
 
 .info-button:hover + .info-pop,
 .info-button:focus-visible + .info-pop { display: block; }
+
+.table-scroll { overflow-x: auto; }
 
 table { width: 100%; border-collapse: collapse; font-size: 1rem; }
 th {
