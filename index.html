@@ -5,9 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>epicuriosimi</title>
   <link rel="stylesheet" href="style.css">
+  <script>
+    // apply saved theme before first paint to avoid a flash
+    try {
+      var t = localStorage.getItem("epicuriosimi:theme");
+      if (!t && matchMedia("(prefers-color-scheme: dark)").matches) t = "dark";
+      if (t === "dark") document.documentElement.dataset.theme = "dark";
+    } catch (e) {}
+  </script>
 </head>
 <body>
   <header>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="switch theme">
+      <span class="when-light" aria-hidden="true">☾</span>
+      <span class="when-dark" aria-hidden="true">☀</span>
+    </button>
     <h1>epicuriosimi</h1>
     <p class="tagline">guess the daily ingredient</p>
     <p class="meta"><span id="puzzle-number"></span><span id="guess-count"></span></p>

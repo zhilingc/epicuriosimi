@@ -330,7 +330,18 @@ function finishGame(celebrate) {
   document.getElementById("win-modal").hidden = false;
 }
 
+function wireThemeToggle() {
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const root = document.documentElement;
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    if (next === "dark") root.dataset.theme = "dark";
+    else delete root.dataset.theme;
+    try { localStorage.setItem("epicuriosimi:theme", next); } catch (e) { /* ignore */ }
+  });
+}
+
 async function init() {
+  wireThemeToggle();
   // ?date=YYYY-MM-DD plays that day's puzzle instead of today's
   const override = new URLSearchParams(location.search).get("date");
   const dateStr = /^\d{4}-\d{2}-\d{2}$/.test(override || "") ? override : todayStr();
