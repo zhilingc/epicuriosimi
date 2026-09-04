@@ -42,7 +42,7 @@ def test_write_puzzles_reveal_prints_target(tmp_path, capsys):
 def test_shipped_targets_are_all_in_real_vocab():
     # guards the committed bag against typos; uses the vocab list shipped with the models
     bag = load_targets(generate_daily.TARGETS_FILE)
-    assert len(bag) == 100
+    assert len(bag) == 200
     assert len(set(bag)) == len(bag)
     vocab_file = generate_daily.SITE_DIR / "vocab.json"
     if vocab_file.exists():
