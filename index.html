@@ -30,8 +30,20 @@
       <button id="giveup-button" class="link-button" type="button">i give up</button>
     </p>
     <p id="result-line" class="result" hidden></p>
+    <div id="last-guess" class="last-guess" hidden>
+      <span id="last-guess-name" class="last-guess-name"></span>
+      <span id="last-guess-scores" class="last-guess-scores"></span>
+    </div>
+    <div class="tabs" role="tablist" aria-label="score tables">
+      <button type="button" role="tab" data-measure="cooc" aria-selected="true"
+              aria-controls="panel-cooc">pairs well with</button>
+      <button type="button" role="tab" data-measure="chem" aria-selected="false"
+              aria-controls="panel-chem">shares flavor profile</button>
+      <button type="button" role="tab" data-measure="core" aria-selected="false"
+              aria-controls="panel-core">similar to</button>
+    </div>
     <div class="tables">
-      <section>
+      <section id="panel-cooc" data-measure="cooc" class="active">
         <h2>pairs well with
           <button type="button" class="info-button" aria-label="about this score">?</button>
           <span class="info-pop" role="tooltip">from epicure-cooc, trained purely
@@ -46,7 +58,7 @@
         </table>
         </div>
       </section>
-      <section>
+      <section id="panel-chem" data-measure="chem">
         <h2>shares flavor profile
           <button type="button" class="info-button" aria-label="about this score">?</button>
           <span class="info-pop" role="tooltip">from epicure-chem, trained only on
@@ -61,7 +73,7 @@
         </table>
         </div>
       </section>
-      <section>
+      <section id="panel-core" data-measure="core">
         <h2>similar to
           <button type="button" class="info-button" aria-label="about this score">?</button>
           <span class="info-pop" role="tooltip">from epicure-core, the blended

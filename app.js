@@ -183,8 +183,44 @@ function takeHint() {
   showNotice("no hints left — every hot ingredient is already on the board");
 }
 
+function renderLastGuess() {
+  const box = document.getElementById("last-guess");
+  const last = guesses[guesses.length - 1];
+  if (last === undefined) { box.hidden = true; return; }
+  document.getElementById("last-guess-name").textContent = displayNames[last];
+  const scores = document.getElementById("last-guess-scores");
+  scores.innerHTML = "";
+  for (const { key, label } of MEASURES) {
+    const chip = document.createElement("span");
+    chip.className = "score-chip";
+    const lbl = document.createElement("span");
+    lbl.className = "chip-label";
+    lbl.textContent = label;
+    const num = document.createElement("span");
+    num.className = "num";
+    num.textContent = (puzzle.scores[key][last] * 100).toFixed(2);
+    const band = BAND_NAMES[puzzle.bands[key][last]];
+    const badge = document.createElement("span");
+    badge.className = `band band-${band}`;
+    badge.textContent = band;
+    chip.append(lbl, num, badge);
+    scores.appendChild(chip);
+  }
+  box.hidden = false;
+}
+
+function selectTab(measure) {
+  for (const b of document.querySelectorAll(".tabs [role=tab]")) {
+    b.setAttribute("aria-selected", String(b.dataset.measure === measure));
+  }
+  for (const s of document.querySelectorAll(".tables section")) {
+    s.classList.toggle("active", s.dataset.measure === measure);
+  }
+}
+
 function renderTables() {
   updateGuessCount();
+  renderLastGuess();
   const last = guesses[guesses.length - 1];
   for (const { key, tableId } of MEASURES) {
     const tbody = document.querySelector(`#${tableId} tbody`);
@@ -316,6 +352,9 @@ async function init() {
 
   document.getElementById("hint-button").addEventListener("click", takeHint);
   document.getElementById("giveup-button").addEventListener("click", giveUp);
+  for (const b of document.querySelectorAll(".tabs [role=tab]")) {
+    b.addEventListener("click", () => selectTab(b.dataset.measure));
+  }
   document.getElementById("giveup-close").addEventListener("click", () => {
     document.getElementById("giveup-modal").hidden = true;
   });
