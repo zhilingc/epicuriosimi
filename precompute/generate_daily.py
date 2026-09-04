@@ -10,23 +10,26 @@ from pathlib import Path
 import numpy as np
 
 from epicure_daily.models import download_models, load_all
-from epicure_daily.puzzle import build_puzzle
+from epicure_daily.puzzle import build_puzzle, load_targets
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SITE_DIR = REPO_ROOT
-CACHE_DIR = REPO_ROOT / "precompute" / ".model_cache"
+PRECOMPUTE_DIR = REPO_ROOT / "precompute"
+CACHE_DIR = PRECOMPUTE_DIR / ".model_cache"
+TARGETS_FILE = PRECOMPUTE_DIR / "targets.txt"
+NAME_EMBEDDINGS_FILE = PRECOMPUTE_DIR / "name_embeddings.npy"
 
 
 def write_puzzles(start: date, days: int, words: list[str],
-                  embeddings: dict[str, np.ndarray], site_dir: Path,
-                  reveal: bool = False) -> list[Path]:
+                  embeddings: dict[str, np.ndarray], name_embeddings: np.ndarray,
+                  bag: list[str], site_dir: Path, reveal: bool = False) -> list[Path]:
     data_dir = site_dir / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
     (site_dir / "vocab.json").write_text(json.dumps(words))
     written = []
     for offset in range(days):
         d = start + timedelta(days=offset)
-        puzzle = build_puzzle(d, embeddings)
+        puzzle = build_puzzle(d, embeddings, name_embeddings, bag, words)
         path = data_dir / f"{d.isoformat()}.json"
         path.write_text(json.dumps(puzzle))
         written.append(path)
@@ -47,10 +50,15 @@ def main() -> None:
                         help="print each day's target ingredient (spoiler!)")
     args = parser.parse_args()
 
-    model_dirs = download_models(CACHE_DIR)
-    words, embeddings = load_all(model_dirs)
-    write_puzzles(date.fromisoformat(args.date), args.days, words, embeddings, SITE_DIR,
-                  reveal=args.reveal)
+    words, embeddings = load_all(download_models(CACHE_DIR))
+    name_embeddings = np.load(NAME_EMBEDDINGS_FILE).astype(np.float32)
+    if name_embeddings.shape[0] != len(words):
+        raise SystemExit(
+            f"{NAME_EMBEDDINGS_FILE} has {name_embeddings.shape[0]} rows but vocab has "
+            f"{len(words)} — rerun precompute/embed_names.py"
+        )
+    write_puzzles(date.fromisoformat(args.date), args.days, words, embeddings,
+                  name_embeddings, load_targets(TARGETS_FILE), SITE_DIR, reveal=args.reveal)
 
 
 if __name__ == "__main__":

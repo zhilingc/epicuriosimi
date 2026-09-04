@@ -76,9 +76,10 @@
       <section id="panel-core" data-measure="core">
         <h2>similar to
           <button type="button" class="info-button" aria-label="about this score">?</button>
-          <span class="info-pop" role="tooltip">from epicure-core, the blended
-            sibling: flavor chemistry plus recipe co-occurrence in one embedding. its
-            score is the best overall "these two are alike."</span>
+          <span class="info-pop" role="tooltip">a blend of two signals: what the
+            ingredient <em>is</em> (its name, read by a language model — so pork stock
+            sits close to pork) and epicure-core, which mixes flavor chemistry with
+            recipe co-occurrence. shown as a closeness percentile, 100 = nearest.</span>
         </h2>
         <div class="table-scroll">
         <table id="table-core">
@@ -113,12 +114,12 @@
   <div id="help-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
     <div class="modal-box help-box">
       <h2 id="help-title">how to play</h2>
-      <p>every day there is one secret ingredient. type a guess and you get three
-        scores out of 100:</p>
+      <p>every day there is one secret ingredient — always something common. type a
+        guess and you get three scores out of 100:</p>
       <ul>
         <li><em>pairs well with</em> — how often the two cook together in real recipes</li>
         <li><em>shares flavor profile</em> — how many flavor compounds they share</li>
-        <li><em>similar to</em> — how alike they are overall</li>
+        <li><em>similar to</em> — how alike they are, by what they are and how they cook</li>
       </ul>
       <p>each score also shows its heat:
         <span class="band band-cold">cold</span>
