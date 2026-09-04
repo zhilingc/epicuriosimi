@@ -261,7 +261,7 @@ main { width: 100%; max-width: 1080px; margin: 0 auto; padding: 1rem 1.25rem; fl
     border-bottom-color: var(--ink);
   }
 
-  .tables { grid-template-columns: 1fr; gap: 0; margin-top: 1rem; }
+  .tables { grid-template-columns: 1fr; gap: 0; margin-top: 1rem; min-height: 14rem; }
   .tables section:not(.active) { display: none; }
 }
 

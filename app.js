@@ -218,6 +218,25 @@ function selectTab(measure) {
   }
 }
 
+function wireSwipe(el) {
+  let startX = 0;
+  let startY = 0;
+  el.addEventListener("touchstart", (e) => {
+    startX = e.changedTouches[0].clientX;
+    startY = e.changedTouches[0].clientY;
+  }, { passive: true });
+  el.addEventListener("touchend", (e) => {
+    if (!window.matchMedia("(max-width: 800px)").matches) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return; // not a horizontal swipe
+    const current = document.querySelector(".tabs [aria-selected=true]").dataset.measure;
+    const i = MEASURES.findIndex((m) => m.key === current);
+    const next = Math.min(MEASURES.length - 1, Math.max(0, i + (dx < 0 ? 1 : -1)));
+    if (next !== i) selectTab(MEASURES[next].key);
+  }, { passive: true });
+}
+
 function renderTables() {
   updateGuessCount();
   renderLastGuess();
@@ -355,6 +374,8 @@ async function init() {
   for (const b of document.querySelectorAll(".tabs [role=tab]")) {
     b.addEventListener("click", () => selectTab(b.dataset.measure));
   }
+  wireSwipe(document.querySelector(".tabs"));
+  wireSwipe(document.querySelector(".tables"));
   document.getElementById("giveup-close").addEventListener("click", () => {
     document.getElementById("giveup-modal").hidden = true;
   });
